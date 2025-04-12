@@ -71,3 +71,62 @@
 .container-buttons button:hover {
   background-color: #555;
 }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Adicionado: animação de entrada para os cards com delay */
+.App > div {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s forwards;
+  animation-delay: 0.1s;
+}
+
+.App > div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.App > div:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.App > div:nth-child(4) {
+  animation-delay: 0.4s;
+}
+/* Adicionado: animação de entrada para o header */
+.header {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 0.5s forwards;
+}
+
+@keyframes fadeInDown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.App > h1 {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 0.5s forwards;
+  animation-delay: 0.1s;
+}
+
+@keyframes fadeInDown {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.App p {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 0.5s forwards;
+  animation-delay: 0.2s;
+}
