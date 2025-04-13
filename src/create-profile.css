@@ -1,27 +1,166 @@
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;/* Light mode background color */
+    background: linear-gradient(135deg, #161616, #2c2c3d)
+}
+
+
+
+.create-profile input,
+.create-profile select,
+.create-profile button {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.create-profile label {
+    align-self: flex-start;
+    font-weight: bold;
+}
+
+.create-profile button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.create-profile button:hover {
+    background-color: #0056b3;
+}
+
+.create-profile {
+    color: white;
+}
+
 .create-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 40px 30px;
-    width: 100%;
-    max-width: 400px;
     justify-content: center;
+    color: white;
+    text-align: center;
+    border-radius: 20px;
+    height: 70vh;
+    gap: 30px;
+    box-shadow: #3d3d55 0px 0px 20px 0px;
+  }
+  
+
+.create-profile h2 {
+    font-weight: bold;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
 }
 
-.create-profile .container {
+.create-profile form {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 40px 30px;
+    gap: 15px;
     width: 100%;
-    max-width: 400px;
-    justify-content: center;
 }
+
+.container {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    max-width: 400px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+.create-profile .container .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.create-profile {
+    background-color: #212124;
+    width: 650px;
+    max-width: 400px;
+    border-radius: 20px;
+}
+
+.label-photo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: bold;
+}   
+
+.hidden-file {
+    display: none;
+}
+
+.file-label {
+    display: inline-block;
+    background-color: #142536;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.file-label:hover {
+    background-color: #0056b3;
+}
+
+.file-label:active {
+    background-color: #00439a;
+}
+
+.file-name {
+    margin-top: 10px;
+    color: #fff;
+    font-size: 0.9rem;
+    word-break: break-word;
+  }
+
+  /* Upgrading the button styles */
+  button {
+    background: linear-gradient(90deg, #007bff, #00bfff);
+    border: none;
+    padding: 12px 0;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+  }
+  
+  button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #00bfff;
+  }
+  
+/* Responsive Design */
+  @media (max-width: 480px) {
+    .container {
+      max-width: 90%;
+      padding: 1.5rem;
+    }
+  
+    .custom-file-upload,
+    button {
+      font-size: 0.9rem;
+      padding: 0.75rem;
+    }
+  }
+  

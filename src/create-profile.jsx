@@ -37,13 +37,17 @@ function CreateProfile() {
           required
         />
 
-        <label>Foto de Perfil:</label>
+        <label htmlFor="profilePic" className="file-label">Foto de Perfil:</label>
         <input
+          id="profilePic"
           type="file"
           accept="image/*"
           onChange={(e) => setProfilePic(e.target.files[0])}
+          className="hidden-file"
         />
-
+        {profilePic && (
+          <p className="file-name">{profilePic.name}</p>
+        )}
         <button type="submit">Salvar Perfil</button>
       </form>
       </div>

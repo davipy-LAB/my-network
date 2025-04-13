@@ -1,14 +1,25 @@
+/* Fundo geral da página */
+body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(to bottom right, #0f0f10, #1f1f30); /* fundo escuro em degradê */
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+/* App centralizado */
 .App {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #e0e0e0;
+  min-height: 100vh;
   flex-direction: column;
   gap: 20px;
   text-align: center;
+  background: transparent; /* fundo removido para não gerar faixas */
 }
 
+/* Container de criação de conta */
 .container-create {
   display: flex;
   flex-direction: column;
@@ -22,11 +33,13 @@
   max-width: 400px;
 }
 
+/* Título do container */
 .container-create h2 {
   margin: 0;
   color: #333;
 }
 
+/* Inputs */
 .container-input {
   display: flex;
   flex-direction: column;
@@ -46,12 +59,13 @@
   padding: 10px;
   border: 1px solid #333;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 16px;
 }
 
+/* Botões */
 .container-buttons {
   display: flex;
-  flex-direction: column; /* ou "row" se quiser lado a lado */
+  flex-direction: column;
   gap: 10px;
   width: 100%;
 }
@@ -72,6 +86,7 @@
   background-color: #555;
 }
 
+/* Animações de entrada */
 @keyframes fadeInUp {
   to {
     opacity: 1;
@@ -79,7 +94,6 @@
   }
 }
 
-/* Adicionado: animação de entrada para os cards com delay */
 .App > div {
   opacity: 0;
   transform: translateY(20px);
@@ -90,7 +104,6 @@
 
 .App > div:nth-child(2) {
   animation-delay: 0.2s;
-  transition: all 0.2s ease;
 }
 .App > div:nth-child(3) {
   animation-delay: 0.3s;
@@ -98,18 +111,19 @@
 .App > div:nth-child(4) {
   animation-delay: 0.4s;
 }
-/* Adicionado: animação de entrada para o header */
-.header {
-  opacity: 0;
-  transform: translateY(-20px);
-  animation: fadeInDown 0.5s forwards;
-}
 
+/* Header animado */
 @keyframes fadeInDown {
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.header {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 0.5s forwards;
 }
 
 .App > h1 {
@@ -119,16 +133,15 @@
   animation-delay: 0.1s;
 }
 
-@keyframes fadeInDown {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .App p {
   opacity: 0;
   transform: translateY(-20px);
   animation: fadeInDown 0.5s forwards;
   animation-delay: 0.2s;
+}
+.App a {
+  opacity: 0;
+  transform: translateY(-20px);
+  animation: fadeInDown 0.5s forwards;
+  animation-delay: 0.3s;
 }
