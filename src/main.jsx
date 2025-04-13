@@ -1,10 +1,17 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'  // Importando o BrowserRouter
 import './index.css'
 import App from './App.jsx'
+import CreateProfile from './create-profile.jsx'  // Importe a página de criação de perfil
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>  {/* Envolva sua aplicação com o BrowserRouter */}
+      <Routes>
+        <Route path="/" element={<App />} />  {/* Página de registro */}
+        <Route path="/create-profile" element={<CreateProfile />} />  {/* Página de criação de perfil */}
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
 )
