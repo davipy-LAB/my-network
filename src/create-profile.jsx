@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './create-profile.css'; // Importe o CSS para estilizar o componente
 
 function CreateProfile() {
   const [username, setUsername] = useState('');
@@ -26,6 +27,7 @@ function CreateProfile() {
   return (
     <div className="create-profile">
       <h2>Criar Perfil</h2>
+      <div className='container'>
       <form onSubmit={handleSubmit}>
         <label>Username:</label>
         <input
@@ -44,6 +46,8 @@ function CreateProfile() {
 
         <button type="submit">Salvar Perfil</button>
       </form>
+      </div>
+      <p>Após criar o perfil, você poderá acessar sua conta.</p>
     </div>
   );
 }
