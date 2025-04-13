@@ -26,7 +26,7 @@ function CreateProfile() {
 
   return (
     <div className="create-profile">
-      <h2>Criar Perfil</h2>
+      <h2>Create Profile</h2>
       <div className='container'>
       <form onSubmit={handleSubmit}>
         <label>Username:</label>
@@ -37,7 +37,7 @@ function CreateProfile() {
           required
         />
 
-        <label htmlFor="profilePic" className="file-label">Foto de Perfil:</label>
+        <label htmlFor="profilePic" className="file-label">User Photo:</label>
         <input
           id="profilePic"
           type="file"
@@ -48,10 +48,10 @@ function CreateProfile() {
         {profilePic && (
           <p className="file-name">{profilePic.name}</p>
         )}
-        <button type="submit">Salvar Perfil</button>
+        <button type="submit">Save User</button>
       </form>
       </div>
-      <p>Após criar o perfil, você poderá acessar sua conta.</p>
+      <p>Once you have created your profile, you can access your account.</p>
     </div>
   );
 }
