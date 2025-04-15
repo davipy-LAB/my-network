@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importando o hook de navegação
-import './App.css';
- // Importando o CSS
+import './App.css'; // Importando o CSS
 
 function App() {
   const [email, setEmail] = useState('');
@@ -29,9 +28,7 @@ function App() {
       if (response.ok) {
         const result = await response.json();
         setMessage(result.message);
-        
-        // Após o registro bem-sucedido, redireciona para a página de criação de perfil
-        navigate('/create-profile');
+        navigate('/create-profile'); // Redireciona após registro
       } else {
         const errorMessage = await response.text();
         setMessage(`Erro: ${errorMessage}`);
@@ -39,6 +36,10 @@ function App() {
     } catch (error) {
       setMessage(`Erro ao registrar usuário: ${error.message}`);
     }
+  };
+
+  const handleRedirectToLogin = () => {
+    navigate('/login'); // Redireciona para a página de login
   };
 
   return (
@@ -72,7 +73,9 @@ function App() {
           </div>
           <div className="container-buttons">
             <button type="submit">Create</button>
-            <button type="button">I already have an account</button>
+            <button type="button" onClick={handleRedirectToLogin}>
+              I already have an account
+            </button>
           </div>
         </form>
         {message && <p style={{ marginTop: '10px', color: 'red' }}>{message}</p>}
@@ -82,3 +85,4 @@ function App() {
 }
 
 export default App;
+// App.jsx

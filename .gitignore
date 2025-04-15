@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 server/users.json
 server/profiles.json
+server/db.json
+server/uploads/1744748083896-609046435.jpg
+server/uploads/1744749834962-889691291.jpg

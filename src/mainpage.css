@@ -1,0 +1,240 @@
+body {
+    background: linear-gradient(to bottom right, #000000, #282829); /* fundo escuro em degradê */
+}
+
+
+
+/* Layout geral */
+.mainpage-wrapper {
+    display: flex;
+    min-height: 100vh; /* Garante que ocupe toda a altura da tela */
+    background-color: #f1f1f1;
+    font-family: Arial, sans-serif;
+    width: 100%; /* Ocupa toda a largura da tela */
+    margin: 0; /* Sem margens */
+    padding: 0; /* Sem padding */
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 250px; /* Ajuste a largura conforme necessário */
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 20px;
+    height: 100vh; /* Garante que a sidebar ocupe toda a altura da tela */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Alinha o conteúdo no topo */
+  }
+  
+  .sidebar-header {
+    text-align: center;
+  }
+  
+  .sidebar-header h2 {
+    font-size: 30px; /* Tamanho maior para a sidebar */
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .sidebar-profile {
+    text-align: center;
+  }
+  
+  .sidebar-profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+  }
+  
+  .sidebar-no-profile-pic {
+    width: 100px;
+    height: 100px;
+    background-color: #bdc3c7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 14px;
+  }
+  
+  .sidebar-profile h3 {
+    font-size: 22px; /* Maior tamanho de fonte */
+    font-weight: 600;
+    margin-top: 10px;
+  }
+  
+  .sidebar-links a {
+    display: block;
+    margin: 15px 0; /* Mais espaçamento entre links */
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 18px; /* Tamanho maior de fonte */
+  }
+  
+  .sidebar-links a:hover {
+    color: #3498db;
+  }
+  
+  /* Main content */
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100vh; /* Garante que o conteúdo principal ocupe toda a altura */
+    overflow-y: auto; /* Se o conteúdo ultrapassar a altura, cria rolagem */
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px; /* Mais espaçamento entre o cabeçalho e o feed */
+  }
+  
+  .header h2 {
+    font-size: 32px; /* Tamanho maior para o título */
+    color: #333;
+  }
+  
+  .create-post-btn {
+    background-color: #3498db;
+    color: #fff;
+    padding: 12px 20px; /* Botão com mais padding */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Tamanho maior de fonte */
+  }
+  
+  .create-post-btn:hover {
+    background-color: #2980b9;
+  }
+  
+  .feed {
+    display: flex;
+    flex-direction: column;
+    gap: 25px; /* Mais espaçamento entre as postagens */
+  }
+  
+  .post {
+    background-color: #fff;
+    padding: 20px; /* Mais espaçamento dentro da postagem */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px; /* Limita a largura máxima da postagem */
+    margin: 0 auto;
+  }
+  
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Mais espaço entre o perfil e o nome */
+  }
+  
+  .post-profile-pic {
+    width: 60px; /* Foto de perfil maior */
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .post-no-profile-pic {
+    width: 60px;
+    height: 60px;
+    background-color: #bdc3c7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  .post-header h4 {
+    font-size: 22px; /* Tamanho maior do nome do usuário */
+    font-weight: 600;
+  }
+  
+  .post p {
+    margin-top: 15px;
+    font-size: 18px; /* Tamanho maior do texto da postagem */
+    color: #333;
+  }
+  
+  .post-actions {
+    display: flex;
+    gap: 15px; /* Maior espaçamento entre os botões */
+    margin-top: 15px;
+  }
+  
+  .post-actions button {
+    background-color: #ecf0f1;
+    border: none;
+    padding: 10px 15px; /* Botões com mais padding */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Tamanho maior para os botões */
+  }
+  
+  .post-actions button:hover {
+    background-color: #bdc3c7;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 1360px) {
+    .mainpage-wrapper {
+      flex-direction: column;
+      padding: 10px;
+    }
+  
+    .sidebar {
+      width: 100%;
+      height: auto;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+  
+    .main-content {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    .header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .feed {
+      gap: 20px;
+    }
+  
+    .create-post-btn {
+      font-size: 14px;
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .mainpage-wrapper {
+      flex-direction: column;
+      padding: 10px;
+    }
+  
+    .sidebar {
+      width: 100vw;
+      height: 100vh;
+      padding: 10px;
+    }
+  
+    .main-content {
+      width: 100%;
+      padding: 10px;
+    }
+  }
+  

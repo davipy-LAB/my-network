@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './login.css';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -11,17 +12,28 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:3000/users'); // ou o endpoint correto
+      // Ajuste para a URL correta (porta 3001)
+      const res = await fetch('http://localhost:3001/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password: senha }), // Envia os dados no corpo
+      });
+
+      if (!res.ok) {
+        throw new Error('Falha na requisição');
+      }
+
       const data = await res.json();
 
-      const userEncontrado = data.find((user) => user.email === email && user.senha === senha);
-
-      if (userEncontrado) {
-        // salvar o login no localStorage (ou outro método de autenticação mais avançado depois)
-        localStorage.setItem('usuarioLogado', JSON.stringify(userEncontrado));
-        navigate('/mainpage'); // ou o nome da sua mainpage
+      if (data.error) {
+        setErro(data.error); // Exibe a mensagem de erro caso o login falhe
       } else {
-        setErro('Email ou senha inválidos');
+        // Salva o email e senha no localStorage antes de ir para MainPage
+        localStorage.setItem('emailTemp', email);
+        localStorage.setItem('senhaTemp', senha);
+        navigate('/mainpage'); // Vai para a tela principal (mainpage.jsx)
       }
     } catch (err) {
       setErro('Erro ao tentar logar. Tente novamente.');
@@ -33,21 +45,25 @@ export default function Login() {
     <div className="login-container">
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          value={senha}
-          onChange={(e) => setSenha(e.target.value)}
-          required
-        />
-        <button type="submit">Entrar</button>
+        <div className="inputs">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            required
+          />
+        </div>
+        <div className="botao">
+          <button type="submit">Entrar</button>
+        </div>
         {erro && <p className="erro">{erro}</p>}
       </form>
     </div>
