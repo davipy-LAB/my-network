@@ -43,7 +43,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>My Network</h1>
+      <h1>NetworQ</h1>
       <p>The local that you can trust</p>
       <div className="container-create">
         <h2>Create Account</h2>
