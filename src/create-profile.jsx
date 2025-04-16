@@ -8,12 +8,21 @@ function CreateProfile() {
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
 
-  // Recuperar as informações do usuário do localStorage
+  // ✅ Primeiro recuperar email e senha
   const email = localStorage.getItem('emailTemp');
   const senha = localStorage.getItem('senhaTemp');
 
+  // ✅ Agora sim pode verificar se existe
+  if (!email || !senha) {
+    navigate('/login');
+    return null;
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // ... resto do código segue igual ...
+
 
     // Autenticar usuário
     fetch('https://networq-wv7c.onrender.com/api/login', {

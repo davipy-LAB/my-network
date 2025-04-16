@@ -11,13 +11,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// ✅ Lista de domínios permitidos
 const allowedOrigins = [
   'https://networq.vercel.app',
-  'https://networq-git-main-davipy-labs-projects.vercel.app'
+  'https://networq-git-main-davipy-labs-projects.vercel.app',
+  'http://localhost:3000' // útil para dev local
 ];
 
+// ✅ Middleware CORS com `credentials`
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -28,14 +31,14 @@ app.use(cors({
   credentials: true,
 }));
 
+// ✅ Permitir JSON e form-data
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // suporte a form-data
+app.use(express.urlencoded({ extended: true }));
 
-// Arquivos JSON
+// ✅ Criar arquivos JSON se não existirem
 const usersFile = path.join(__dirname, 'users.json');
 const profilesFile = path.join(__dirname, 'profiles.json');
 
-// Criar arquivos se não existirem
 if (!fs.existsSync(usersFile) || fs.readFileSync(usersFile, 'utf-8').trim() === '') {
   fs.writeFileSync(usersFile, '[]');
 }
@@ -43,13 +46,13 @@ if (!fs.existsSync(profilesFile) || fs.readFileSync(profilesFile, 'utf-8').trim(
   fs.writeFileSync(profilesFile, '[]');
 }
 
-// Pasta de uploads
+// ✅ Pasta de uploads
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Multer config
+// ✅ Configuração do Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => {
@@ -59,12 +62,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Teste de rota principal
+// ✅ Rota raiz
 app.get('/', (req, res) => {
   res.send('Servidor rodando com sucesso!');
 });
 
-// Rota: Registrar novo usuário
+// ✅ Registro de usuário
 app.post('/api/register', (req, res) => {
   const { username, email, password } = req.body;
 
@@ -93,7 +96,7 @@ app.post('/api/register', (req, res) => {
   }
 });
 
-// Rota: Obter todos os usuários
+// ✅ Obter todos os usuários
 app.get('/api/users', (req, res) => {
   try {
     const users = JSON.parse(fs.readFileSync(usersFile));
@@ -103,7 +106,7 @@ app.get('/api/users', (req, res) => {
   }
 });
 
-// Rota: Criar perfil com imagem
+// ✅ Criar perfil com imagem
 app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
   const { userId, username } = req.body;
 
@@ -131,9 +134,13 @@ app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
   }
 });
 
-// Rota: Login
+// ✅ Login
 app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email e senha são obrigatórios!' });
+  }
 
   try {
     const users = JSON.parse(fs.readFileSync(usersFile));
@@ -151,10 +158,10 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// Servir arquivos da pasta uploads
+// ✅ Servir arquivos estáticos da pasta uploads
 app.use('/uploads', express.static(uploadDir));
 
-// Iniciar servidor
+// ✅ Rodar servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
