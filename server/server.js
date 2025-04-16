@@ -12,7 +12,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const allowedOrigins = [
-  'https://networq.vercel.app',
+  'https://networq.vercel.app/api/login',
   'https://networq-git-main-davipy-labs-projects.vercel.app'
 ];
 
