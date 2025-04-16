@@ -6,12 +6,17 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename); // Corrigido o nome da variável
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+// CORS liberando acesso do front
+app.use(cors({
+  origin: 'https://teuprojeto.netlify.app', // Altere esse link pro seu real!
+  methods: ['GET', 'POST'],
+}));
+
 app.use(express.json());
 
 // Caminhos dos arquivos
@@ -73,7 +78,7 @@ app.get('/api/users', (req, res) => {
 // Criar perfil vinculado a um userId
 app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
   const { userId, username } = req.body;
-  const imagePath = `/uploads/${req.file.filename}`; // Corrigido o uso de template string
+  const imagePath = `/uploads/${req.file.filename}`;
 
   const profile = {
     userId: parseInt(userId),
@@ -107,6 +112,5 @@ app.use('/uploads', express.static(uploadDir));
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`); // Corrigido com crase
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
-// Para iniciar o servidor, use o comando: node server/server.js
