@@ -13,7 +13,7 @@ export default function Login() {
 
     try {
       // Ajuste para a URL correta (porta 3001)
-      const res = await fetch('http://localhost:3001/api/login', {
+      const res = await fetch('https://networq-wv7c.onrender.com/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

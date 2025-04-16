@@ -16,7 +16,7 @@ function CreateProfile() {
     e.preventDefault();
 
     // Autenticar usuário
-    fetch('http://localhost:3001/api/login', {
+    fetch('https://networq-wv7c.onrender.com/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -34,7 +34,7 @@ function CreateProfile() {
           formData.append('username', username);
           formData.append('profilePic', profilePic);
 
-          fetch('http://localhost:3001/api/create-profile', {
+          fetch('https://networq-wv7c.onrender.com/api/create-profile', {
             method: 'POST',
             body: formData,
           })
