@@ -11,9 +11,19 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS
+const allowedOrigins = [
+  'https://networq.vercel.app',
+  'https://networq-git-main-davipy-labs-projects.vercel.app'
+];
+
 app.use(cors({
-  origin: 'https://networq.vercel.app', // sem a barra no final!
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST'],
   credentials: true,
 }));
