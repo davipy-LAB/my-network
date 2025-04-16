@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 3001;
 const allowedOrigins = [
   'https://networq.vercel.app',
   'https://networq-git-main-davipy-labs-projects.vercel.app',
+  'https://networq-davipy-labs-projects.vercel.app',
   'http://localhost:3000' // útil para dev local
 ];
 
