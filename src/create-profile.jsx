@@ -11,22 +11,17 @@ function CreateProfile() {
   const email = localStorage.getItem('emailTemp');
   const senha = localStorage.getItem('senhaTemp');
 
-  // ✅ Redirecionar usando useEffect corretamente
   useEffect(() => {
     if (!email || !senha) {
       navigate('/login');
     }
   }, [email, senha, navigate]);
 
-  // Evita renderizar antes do redirecionamento
-  if (!email || !senha) {
-    return null;
-  }
+  if (!email || !senha) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Fazer login antes de criar perfil
     fetch('https://networq-wv7c.onrender.com/api/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -40,7 +35,7 @@ function CreateProfile() {
           const formData = new FormData();
           formData.append('userId', userId);
           formData.append('username', username);
-          formData.append('profilePic', profilePic);
+          if (profilePic) formData.append('profilePic', profilePic);
 
           fetch('https://networq-wv7c.onrender.com/api/create-profile', {
             method: 'POST',
@@ -48,7 +43,6 @@ function CreateProfile() {
           })
             .then(res => res.json())
             .then(profileData => {
-              console.log('Perfil criado:', profileData);
               localStorage.setItem('username', username);
               localStorage.setItem('userId', userId);
 
@@ -56,7 +50,7 @@ function CreateProfile() {
                 const reader = new FileReader();
                 reader.onloadend = () => {
                   localStorage.setItem('profilePic', reader.result);
-                  navigate('/mainpage'); // Só redireciona depois de salvar a imagem
+                  navigate('/mainpage');
                 };
                 reader.readAsDataURL(profilePic);
               } else {
@@ -72,10 +66,7 @@ function CreateProfile() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     setProfilePic(file);
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPreview(imageUrl);
-    }
+    if (file) setPreview(URL.createObjectURL(file));
   };
 
   return (
@@ -84,22 +75,10 @@ function CreateProfile() {
         <h2>Create Profile</h2>
         <form onSubmit={handleSubmit}>
           <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+          <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)} />
 
           <label htmlFor="profilePic" className="file-label">User Photo:</label>
-          <input
-            id="profilePic"
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="hidden-file"
-          />
-
+          <input id="profilePic" type="file" accept="image/*" onChange={handleImageChange} className="hidden-file" />
           {profilePic && <p className="file-name">{profilePic.name}</p>}
 
           <button type="submit">Save User</button>

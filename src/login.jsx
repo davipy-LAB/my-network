@@ -12,28 +12,22 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      // Ajuste para a URL correta (porta 3001)
       const res = await fetch('https://networq-wv7c.onrender.com/api/login', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password: senha }), // Envia os dados no corpo
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: senha }),
       });
 
-      if (!res.ok) {
-        throw new Error('Falha na requisição');
-      }
+      if (!res.ok) throw new Error('Falha na requisição');
 
       const data = await res.json();
 
       if (data.error) {
-        setErro(data.error); // Exibe a mensagem de erro caso o login falhe
+        setErro(data.error);
       } else {
-        // Salva o email e senha no localStorage antes de ir para MainPage
         localStorage.setItem('emailTemp', email);
         localStorage.setItem('senhaTemp', senha);
-        navigate('/mainpage'); // Vai para a tela principal (mainpage.jsx)
+        navigate('/mainpage');
       }
     } catch (err) {
       setErro('Erro ao tentar logar. Tente novamente.');
@@ -46,20 +40,8 @@ export default function Login() {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div className="inputs">
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
+          <input type="email" placeholder="Email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input type="password" placeholder="Senha" required value={senha} onChange={(e) => setSenha(e.target.value)} />
         </div>
         <div className="botao">
           <button type="submit">Entrar</button>

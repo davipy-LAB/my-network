@@ -11,23 +11,23 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const userData = {
-      email,
-      password,
-    };
+    const userData = { email, password };
 
     try {
       const response = await fetch('https://networq-wv7c.onrender.com/api/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
       });
 
       if (response.ok) {
         const result = await response.json();
         setMessage('Conta criada com sucesso!');
+
+        // Salva email e senha temporariamente
+        localStorage.setItem('emailTemp', email);
+        localStorage.setItem('senhaTemp', password);
+
         setTimeout(() => {
           navigate('/create-profile');
         }, 1000);
@@ -53,31 +53,15 @@ function App() {
         <form onSubmit={handleSubmit}>
           <div className="container-input">
             <label htmlFor="email">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
           <div className="container-input">
             <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <div className="container-buttons">
             <button type="submit">Create</button>
-            <button type="button" onClick={handleRedirectToLogin}>
-              I already have an account
-            </button>
+            <button type="button" onClick={handleRedirectToLogin}>I already have an account</button>
           </div>
         </form>
         {message && <p style={{ marginTop: '10px', color: message.startsWith('Erro') ? 'red' : 'green' }}>{message}</p>}
