@@ -16,15 +16,16 @@ const allowedOrigins = [
   'https://networq.vercel.app',
   'https://networq-git-main-davipy-labs-projects.vercel.app',
   'https://networq-davipy-labs-projects.vercel.app',
-  'http://localhost:3000'
+  'http://localhost:3000',
 ];
 
 // Middleware CORS com credentials
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.error(`CORS bloqueado para a origem: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -36,18 +37,20 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Arquivos JSON
+// Caminhos para arquivos JSON
 const usersFile = path.join(__dirname, 'users.json');
 const profilesFile = path.join(__dirname, 'profiles.json');
 
-if (!fs.existsSync(usersFile) || fs.readFileSync(usersFile, 'utf-8').trim() === '') {
-  fs.writeFileSync(usersFile, '[]');
-}
-if (!fs.existsSync(profilesFile) || fs.readFileSync(profilesFile, 'utf-8').trim() === '') {
-  fs.writeFileSync(profilesFile, '[]');
-}
+// Inicializar arquivos JSON se não existirem ou estiverem vazios
+const initializeFile = (filePath, defaultContent) => {
+  if (!fs.existsSync(filePath) || fs.readFileSync(filePath, 'utf-8').trim() === '') {
+    fs.writeFileSync(filePath, JSON.stringify(defaultContent, null, 2));
+  }
+};
+initializeFile(usersFile, []);
+initializeFile(profilesFile, []);
 
-// Uploads
+// Configuração de uploads
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
@@ -57,7 +60,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const unique = Date.now() + '-' + Math.round(Math.random() * 1E9);
     cb(null, unique + path.extname(file.originalname));
-  }
+  },
 });
 const upload = multer({ storage });
 
@@ -82,7 +85,7 @@ app.post('/api/register', (req, res) => {
       return res.status(409).json({ error: 'Email já registrado!' });
     }
 
-    const newId = users.length > 0 ? users[users.length - 1].id + 1 : 1;
+    const newId = users.length > 0 ? Math.max(...users.map(u => u.id || 0)) + 1 : 1;
     const newUser = { id: newId, email: email.toLowerCase(), password };
 
     users.push(newUser);
@@ -103,6 +106,7 @@ app.get('/api/users', (req, res) => {
     const usersWithoutPasswords = users.map(({ password, ...u }) => u);
     res.json(usersWithoutPasswords);
   } catch (err) {
+    console.error('Erro ao ler usuários:', err);
     res.status(500).json({ error: 'Erro ao ler usuários' });
   }
 });
@@ -111,13 +115,14 @@ app.get('/api/users', (req, res) => {
 app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
   const { userId, username } = req.body;
 
-  if (!userId || !username || !req.file) {
+  const userIdNumber = parseInt(userId, 10);
+  if (isNaN(userIdNumber) || !username || !req.file) {
     return res.status(400).json({ error: 'Campos ou imagem ausentes!' });
   }
 
   try {
     const profiles = JSON.parse(fs.readFileSync(profilesFile));
-    const existingProfile = profiles.find(p => p.userId === parseInt(userId));
+    const existingProfile = profiles.find(p => p.userId === userIdNumber);
 
     if (existingProfile) {
       return res.status(409).json({ error: 'Perfil já criado para este usuário.' });
@@ -125,10 +130,10 @@ app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
 
     const imagePath = `/uploads/${req.file.filename}`;
     const profile = {
-      userId: parseInt(userId),
+      userId: userIdNumber,
       username,
       image: imagePath,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     profiles.push(profile);
