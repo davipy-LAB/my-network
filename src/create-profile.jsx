@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import './create-profile.css';
 
 function CreateProfile() {
-  const [username, setUsername] = useState('');
   const [profilePic, setProfilePic] = useState(null);
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
 
   const email = localStorage.getItem('emailTemp');
   const senha = localStorage.getItem('senhaTemp');
+  const username = localStorage.getItem('usernameTemp'); // Recupera o username do localStorage
 
   useEffect(() => {
     if (!email || !senha) {
@@ -34,7 +34,7 @@ function CreateProfile() {
 
           const formData = new FormData();
           formData.append('userId', userId);
-          formData.append('username', username);
+          formData.append('username', username); // Usa o username já salvo
           if (profilePic) formData.append('profilePic', profilePic);
 
           fetch('https://networq-wv7c.onrender.com/api/create-profile', {
@@ -74,9 +74,6 @@ function CreateProfile() {
       <div className="create-profile">
         <h2>Create Profile</h2>
         <form onSubmit={handleSubmit}>
-          <label>Username:</label>
-          <input type="text" required value={username} onChange={(e) => setUsername(e.target.value)} />
-
           <label htmlFor="profilePic" className="file-label">User Photo:</label>
           <input id="profilePic" type="file" accept="image/*" onChange={handleImageChange} className="hidden-file" />
           {profilePic && <p className="file-name">{profilePic.name}</p>}
