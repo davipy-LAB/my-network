@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './create-profile.css';
 
@@ -8,38 +8,37 @@ function CreateProfile() {
   const [preview, setPreview] = useState(null);
   const navigate = useNavigate();
 
-  // ✅ Primeiro recuperar email e senha
   const email = localStorage.getItem('emailTemp');
   const senha = localStorage.getItem('senhaTemp');
 
-  // ✅ Agora sim pode verificar se existe
+  // ✅ Redirecionar usando useEffect corretamente
+  useEffect(() => {
+    if (!email || !senha) {
+      navigate('/login');
+    }
+  }, [email, senha, navigate]);
+
+  // Evita renderizar antes do redirecionamento
   if (!email || !senha) {
-    navigate('/login');
     return null;
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    // ... resto do código segue igual ...
 
-
-    // Autenticar usuário
+    // Fazer login antes de criar perfil
     fetch('https://networq-wv7c.onrender.com/api/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password: senha }),
     })
       .then(res => res.json())
       .then(data => {
         if (data.user) {
-          const userId = data.user.id; // Pega o ID do usuário autenticado
+          const userId = data.user.id;
 
-          // Criar o perfil
           const formData = new FormData();
-          formData.append('userId', userId); // Enviar o userId
+          formData.append('userId', userId);
           formData.append('username', username);
           formData.append('profilePic', profilePic);
 
@@ -48,20 +47,21 @@ function CreateProfile() {
             body: formData,
           })
             .then(res => res.json())
-            .then(data => {
-              console.log('Perfil criado:', data);
-
-              // Armazenando os dados no localStorage após a criação do perfil
+            .then(profileData => {
+              console.log('Perfil criado:', profileData);
               localStorage.setItem('username', username);
+              localStorage.setItem('userId', userId);
+
               if (profilePic) {
                 const reader = new FileReader();
                 reader.onloadend = () => {
-                  localStorage.setItem('profilePic', reader.result); // Armazenando a imagem em base64
+                  localStorage.setItem('profilePic', reader.result);
+                  navigate('/mainpage'); // Só redireciona depois de salvar a imagem
                 };
-                reader.readAsDataURL(profilePic); // Convertendo a imagem para base64
+                reader.readAsDataURL(profilePic);
+              } else {
+                navigate('/mainpage');
               }
-
-              navigate('/mainpage'); // Redireciona para a mainpage
             })
             .catch(err => console.error('Erro ao criar o perfil:', err));
         }
