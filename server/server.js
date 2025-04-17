@@ -78,7 +78,7 @@ app.post('/api/register', (req, res) => {
   }
 
   try {
-    const users = JSON.parse(fs.readFileSync(usersFile));
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
     const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
     if (existingUser) {
@@ -89,7 +89,7 @@ app.post('/api/register', (req, res) => {
     const newUser = { id: newId, email: email.toLowerCase(), password };
 
     users.push(newUser);
-    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
+    fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf-8');
 
     const { password: _, ...userWithoutPassword } = newUser;
     res.status(201).json({ message: 'Usuário registrado com sucesso', user: userWithoutPassword });
@@ -102,7 +102,7 @@ app.post('/api/register', (req, res) => {
 // Obter usuários
 app.get('/api/users', (req, res) => {
   try {
-    const users = JSON.parse(fs.readFileSync(usersFile));
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
     const usersWithoutPasswords = users.map(({ password, ...u }) => u);
     res.json(usersWithoutPasswords);
   } catch (err) {
@@ -121,7 +121,7 @@ app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
   }
 
   try {
-    const profiles = JSON.parse(fs.readFileSync(profilesFile));
+    const profiles = JSON.parse(fs.readFileSync(profilesFile, 'utf-8'));
     const existingProfile = profiles.find(p => p.userId === userIdNumber);
 
     if (existingProfile) {
@@ -137,7 +137,7 @@ app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
     };
 
     profiles.push(profile);
-    fs.writeFileSync(profilesFile, JSON.stringify(profiles, null, 2));
+    fs.writeFileSync(profilesFile, JSON.stringify(profiles, null, 2), 'utf-8');
 
     res.json({ message: 'Perfil criado com sucesso!', profile });
   } catch (err) {
@@ -155,8 +155,8 @@ app.post('/api/login', (req, res) => {
   }
 
   try {
-    const users = JSON.parse(fs.readFileSync(usersFile));
-    const profiles = JSON.parse(fs.readFileSync(profilesFile));
+    const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const profiles = JSON.parse(fs.readFileSync(profilesFile, 'utf-8'));
 
     const normalizedEmail = email.toLowerCase();
     const user = users.find(u => u.email.toLowerCase() === normalizedEmail && u.password === password);
@@ -182,3 +182,4 @@ app.use('/uploads', express.static(uploadDir));
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
+
