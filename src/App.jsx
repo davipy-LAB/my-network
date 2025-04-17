@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Importando o hook de navegação
-import './App.css'; // Importando o CSS
+import { useNavigate } from 'react-router-dom';
+import './App.css';
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-  const navigate = useNavigate();  // Hook para navegação
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,19 +27,21 @@ function App() {
 
       if (response.ok) {
         const result = await response.json();
-        setMessage(result.message);
-        navigate('/create-profile'); // Redireciona após registro
+        setMessage('Conta criada com sucesso!');
+        setTimeout(() => {
+          navigate('/create-profile');
+        }, 1000);
       } else {
         const errorMessage = await response.text();
         setMessage(`Erro: ${errorMessage}`);
       }
     } catch (error) {
-      setMessage(`Erro ao registrar usuário: ${error.message}`);
+      setMessage(`Erro ao registrar: ${error.message}`);
     }
   };
 
   const handleRedirectToLogin = () => {
-    navigate('/login'); // Redireciona para a página de login
+    navigate('/login');
   };
 
   return (
@@ -78,11 +80,10 @@ function App() {
             </button>
           </div>
         </form>
-        {message && <p style={{ marginTop: '10px', color: 'red' }}>{message}</p>}
+        {message && <p style={{ marginTop: '10px', color: message.startsWith('Erro') ? 'red' : 'green' }}>{message}</p>}
       </div>
     </div>
   );
 }
 
 export default App;
-// App.jsx
