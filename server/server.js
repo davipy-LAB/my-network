@@ -16,7 +16,7 @@ const allowedOrigins = [
   'https://networq.vercel.app',
   'https://networq-git-main-davipy-labs-projects.vercel.app',
   'https://networq-davipy-labs-projects.vercel.app',
-  'http://localhost:3000' // útil para dev local
+  'http://localhost:3000'
 ];
 
 // Middleware CORS com credentials
@@ -32,11 +32,11 @@ app.use(cors({
   credentials: true,
 }));
 
-// Permitir JSON e form-data
+// Middleware de parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Criar arquivos JSON se não existirem
+// Arquivos JSON
 const usersFile = path.join(__dirname, 'users.json');
 const profilesFile = path.join(__dirname, 'profiles.json');
 
@@ -47,13 +47,11 @@ if (!fs.existsSync(profilesFile) || fs.readFileSync(profilesFile, 'utf-8').trim(
   fs.writeFileSync(profilesFile, '[]');
 }
 
-// Pasta de uploads
+// Uploads
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-
-// Configuração do Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => {
@@ -63,16 +61,16 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Rota raiz
+// Rota inicial
 app.get('/', (req, res) => {
   res.send('Servidor rodando com sucesso!');
 });
 
-// Registro de usuário
+// Registrar usuário (apenas email + senha)
 app.post('/api/register', (req, res) => {
-  const { username, email, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !email || !password) {
+  if (!email || !password) {
     return res.status(400).json({ error: 'Preencha todos os campos!' });
   }
 
@@ -85,7 +83,7 @@ app.post('/api/register', (req, res) => {
     }
 
     const newId = users.length > 0 ? users[users.length - 1].id + 1 : 1;
-    const newUser = { id: newId, username, email: email.toLowerCase(), password };
+    const newUser = { id: newId, email: email.toLowerCase(), password };
 
     users.push(newUser);
     fs.writeFileSync(usersFile, JSON.stringify(users, null, 2));
@@ -98,7 +96,7 @@ app.post('/api/register', (req, res) => {
   }
 });
 
-// Obter todos os usuários
+// Obter usuários
 app.get('/api/users', (req, res) => {
   try {
     const users = JSON.parse(fs.readFileSync(usersFile));
@@ -109,7 +107,7 @@ app.get('/api/users', (req, res) => {
   }
 });
 
-// Criar perfil com imagem
+// Criar perfil (com imagem + nome)
 app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
   const { userId, username } = req.body;
 
@@ -172,10 +170,10 @@ app.post('/api/login', (req, res) => {
   }
 });
 
-// Servir arquivos estáticos da pasta uploads
+// Servir arquivos de imagem
 app.use('/uploads', express.static(uploadDir));
 
-// Rodar servidor
+// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
