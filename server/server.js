@@ -69,33 +69,50 @@ app.get('/', (req, res) => {
   res.send('Servidor rodando com sucesso!');
 });
 
-// Registrar usuário (apenas email + senha)
+// Registrar usuário e criar perfil
 app.post('/api/register', (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, username } = req.body;
 
-  if (!email || !password) {
+  if (!email || !password || !username) {
     return res.status(400).json({ error: 'Preencha todos os campos!' });
   }
 
   try {
     const users = JSON.parse(fs.readFileSync(usersFile, 'utf-8'));
+    const profiles = JSON.parse(fs.readFileSync(profilesFile, 'utf-8'));
+
     const existingUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
     if (existingUser) {
       return res.status(409).json({ error: 'Email já registrado!' });
     }
 
-    const newId = users.length > 0 ? Math.max(...users.map(u => u.id || 0)) + 1 : 1;
-    const newUser = { id: newId, email: email.toLowerCase(), password };
+    // Criar novo usuário
+    const newUserId = users.length > 0 ? Math.max(...users.map(u => u.id || 0)) + 1 : 1;
+    const newUser = { id: newUserId, email: email.toLowerCase(), password };
 
     users.push(newUser);
     fs.writeFileSync(usersFile, JSON.stringify(users, null, 2), 'utf-8');
 
-    const { password: _, ...userWithoutPassword } = newUser;
-    res.status(201).json({ message: 'Usuário registrado com sucesso', user: userWithoutPassword });
+    // Criar perfil vinculado ao usuário
+    const newProfile = {
+      userId: newUserId,
+      username,
+      image: null, // Pode ser atualizado posteriormente
+      createdAt: new Date().toISOString(),
+    };
+
+    profiles.push(newProfile);
+    fs.writeFileSync(profilesFile, JSON.stringify(profiles, null, 2), 'utf-8');
+
+    res.status(201).json({
+      message: 'Usuário e perfil criados com sucesso!',
+      user: { id: newUserId, email },
+      profile: newProfile,
+    });
   } catch (err) {
-    console.error('Erro ao salvar usuário:', err);
-    res.status(500).json({ error: 'Erro ao registrar usuário' });
+    console.error('Erro ao registrar usuário e criar perfil:', err);
+    res.status(500).json({ error: 'Erro ao registrar usuário e criar perfil' });
   }
 });
 
@@ -111,38 +128,43 @@ app.get('/api/users', (req, res) => {
   }
 });
 
-// Criar perfil (com imagem + nome)
+// Criar ou atualizar perfil (com imagem + nome)
 app.post('/api/create-profile', upload.single('profilePic'), (req, res) => {
   const { userId, username } = req.body;
 
   const userIdNumber = parseInt(userId, 10);
-  if (isNaN(userIdNumber) || !username || !req.file) {
-    return res.status(400).json({ error: 'Campos ou imagem ausentes!' });
+  if (isNaN(userIdNumber) || !username) {
+    return res.status(400).json({ error: 'Campos obrigatórios ausentes!' });
   }
 
   try {
     const profiles = JSON.parse(fs.readFileSync(profilesFile, 'utf-8'));
     const existingProfile = profiles.find(p => p.userId === userIdNumber);
 
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+
     if (existingProfile) {
-      return res.status(409).json({ error: 'Perfil já criado para este usuário.' });
+      // Atualizar perfil existente
+      existingProfile.username = username;
+      if (imagePath) existingProfile.image = imagePath;
+      existingProfile.updatedAt = new Date().toISOString();
+    } else {
+      // Criar novo perfil
+      const newProfile = {
+        userId: userIdNumber,
+        username,
+        image: imagePath,
+        createdAt: new Date().toISOString(),
+      };
+      profiles.push(newProfile);
     }
 
-    const imagePath = `/uploads/${req.file.filename}`;
-    const profile = {
-      userId: userIdNumber,
-      username,
-      image: imagePath,
-      createdAt: new Date().toISOString(),
-    };
-
-    profiles.push(profile);
     fs.writeFileSync(profilesFile, JSON.stringify(profiles, null, 2), 'utf-8');
 
-    res.json({ message: 'Perfil criado com sucesso!', profile });
+    res.json({ message: 'Perfil salvo com sucesso!' });
   } catch (err) {
-    console.error('Erro ao criar perfil:', err);
-    res.status(500).json({ error: 'Erro ao criar perfil' });
+    console.error('Erro ao salvar perfil:', err);
+    res.status(500).json({ error: 'Erro ao salvar perfil' });
   }
 });
 
@@ -182,4 +204,3 @@ app.use('/uploads', express.static(uploadDir));
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
-
